@@ -1,52 +1,136 @@
-# Read Me First
+# Minitwitter
 
-The following was discovered as part of building this project:
+Minitwitter es una aplicación web simple, al estilo de Twitter, que permite a los usuarios publicar mensajes cortos, ver un timeline y retuitear los mensajes de otros. Este proyecto está construido con un backend de **Spring Boot** y un frontend de **React**.
 
-* No Docker Compose services found. As of now, the application won't start! Please add at least one service to the
-  `compose.yaml` file.
+## ✨ Características
 
-# Getting Started
+*   **Gestión de Usuarios:** Creación de nuevos usuarios en el sistema.
+*   **Publicación de Tweets:** Los usuarios pueden publicar mensajes de hasta 280 caracteres.
+*   **Timeline:** Visualización de los tweets de los usuarios a los que sigues (funcionalidad a futuro) o un timeline global.
+*   **Retweets:** Los usuarios pueden retuitear los mensajes de otros.
 
-### Reference Documentation
+## 🛠️ Tecnologías Utilizadas
 
-For further reference, please consider the following sections:
+*   **Backend:**
+    *   Java
+    *   Spring Boot
+    *   Spring Data JPA (Hibernate)
+    *   Base de datos en memoria H2
+    *   Maven / Gradle
+*   **Frontend:**
+    *   React
+    *   Tailwind CSS
+    *   Vite / Create React App
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/4.0.0/maven-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/4.0.0/maven-plugin/build-image.html)
-* [Spring Configuration Processor](https://docs.spring.io/spring-boot/4.0.0/specification/configuration-metadata/annotation-processor.html)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/4.0.0/reference/data/sql.html#data.sql.jpa-and-spring-data)
-* [Rest Repositories](https://docs.spring.io/spring-boot/4.0.0/how-to/data-access.html#howto.data-access.exposing-spring-data-repositories-as-rest)
-* [Spring Boot DevTools](https://docs.spring.io/spring-boot/4.0.0/reference/using/devtools.html)
-* [Docker Compose Support](https://docs.spring.io/spring-boot/4.0.0/reference/features/dev-services.html#features.dev-services.docker-compose)
-* [HTTP Client](https://docs.spring.io/spring-boot/4.0.0/reference/io/rest-client.html#io.rest-client.restclient)
-* [Spring Web](https://docs.spring.io/spring-boot/4.0.0/reference/web/servlet.html)
+## 🚀 Cómo Empezar
 
-### Guides
+Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno local.
 
-The following guides illustrate how to use some features concretely:
+### Prerrequisitos
 
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-* [Accessing JPA Data with REST](https://spring.io/guides/gs/accessing-data-rest/)
-* [Accessing Neo4j Data with REST](https://spring.io/guides/gs/accessing-neo4j-data-rest/)
-* [Accessing MongoDB Data with REST](https://spring.io/guides/gs/accessing-mongodb-data-rest/)
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
+Asegúrate de tener instalado lo siguiente:
+*   JDK 17 o superior
+*   Maven o Gradle
+*   Node.js y npm (o yarn)
 
-### Docker Compose support
+### 1. Configuración del Backend
 
-This project contains a Docker Compose file named `compose.yaml`.
+```sh
+# 1. Clona el repositorio
+git clone https://github.com/tu-usuario/minitwitter.git
+cd minitwitter
 
-However, no services were found. As of now, the application won't start!
+# 2. Navega al directorio del backend y compila el proyecto
+# (Asegúrate de estar en la raíz del proyecto donde está el pom.xml o build.gradle)
+mvn clean install
 
-Please make sure to add at least one service in the `compose.yaml` file.
+# 3. Ejecuta la aplicación Spring Boot
+mvn spring-boot:run
+```
 
-### Maven Parent overrides
+El backend estará disponible en `http://localhost:8080`.
 
-Due to Maven's design, elements are inherited from the parent POM to the project POM.
-While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the
-parent.
-To prevent this, the project POM contains empty overrides for these elements.
-If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
+### 2. Configuración del Frontend
 
+```sh
+# 1. Abre una nueva terminal y navega al directorio del frontend
+cd frontend # O el nombre de tu carpeta de frontend
+
+# 2. Instala las dependencias
+npm install
+
+# 3. Inicia el servidor de desarrollo de React
+npm run dev
+```
+
+El frontend estará disponible en `http://localhost:5173` (o el puerto que configure tu herramienta, como 3000).
+
+## ⚙️ Uso y Endpoints de la API
+
+Para interactuar con la aplicación, puedes usar un cliente de API como `curl` o Postman.
+
+### **Paso Fundamental: Crear Usuarios**
+
+**Es obligatorio crear usuarios antes de poder realizar cualquier otra acción.** La aplicación no funcionará correctamente sin usuarios existentes.
+
+Ejecuta los siguientes comandos en tu terminal para crear algunos usuarios de ejemplo:
+
+```sh
+# --- 1. CREAR USUARIOS ---
+curl -X POST "http://localhost:8080/api/users?userName=alice"
+curl -X POST "http://localhost:8080/api/users?userName=bobsmith"
+curl -X POST "http://localhost:8080/api/users?userName=charlie"
+curl -X POST "http://localhost:8080/api/users?userName=diana_dev"
+curl -X POST "http://localhost:8080/api/users?userName=edward123"
+```
+
+### Otros Endpoints
+
+Una vez creados los usuarios, puedes interactuar con la API para crear tweets y retweets.
+
+#### **2. Crear un Tweet**
+
+Publica un nuevo tweet como uno de los usuarios creados (por ejemplo, `alice`, cuyo ID de usuario suele ser `1`).
+
+```sh
+curl -X POST "http://localhost:8080/api/tweets" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "userId": 1,
+           "text": "¡Hola, este es mi primer tweet en Minitwitter!"
+         }'
+```
+
+#### **3. Hacer un Retweet**
+
+Haz un retweet de un tweet existente (por ejemplo, el tweet con ID `1`) como otro usuario (por ejemplo, `bobsmith`, cuyo ID de usuario suele ser `2`).
+
+```sh
+curl -X POST "http://localhost:8080/api/tweets/retweet" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "userId": 2,
+           "originalTweetId": 1
+         }'
+```
+
+#### **4. Obtener el Timeline de un Usuario**
+
+Visualiza todos los tweets y retweets de un usuario específico.
+
+```sh
+curl -X GET "http://localhost:8080/api/users/1/timeline"
+```
+
+## 📂 Estructura del Proyecto
+
+```
+minitwitter/
+├─── src/main/java/tpindividual/minitwitter/  # Lógica del backend (controladores, servicios, repositorios, entidades)
+├─── src/main/resources/                     # Archivos de configuración de Spring (application.properties)
+├─── frontend/                               # Código fuente del frontend en React
+│    ├─── src/
+│    └─── ...
+├─── pom.xml                                 # Dependencias y configuración de Maven
+└─── README.md                               # Este archivo
+```
